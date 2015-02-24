@@ -24,6 +24,9 @@ assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell s
 CELLWIDTH = int(WINDOWWIDTH / CELLSIZE)
 CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
 
+pygame.init()
+effect = pygame.mixer.Sound('hadoukenogg.ogg');
+
 #             R    G    B
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)
@@ -51,6 +54,8 @@ gWormCoords = [{'x': gStartx,     'y': gStarty},
               {'x': gStartx - 2, 'y': gStarty}]
 gDirection = RIGHT
 
+
+
 gApple = {'x': 0, 'y': 0}
 
 #
@@ -66,11 +71,12 @@ def main():
 def init():
     global FPSCLOCK, DISPLAYSURF, BASICFONT
 
-    pygame.init()
+    
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     pygame.display.set_caption('Wormy')
+    
     
 def runGame():
     game_init()    
@@ -92,8 +98,14 @@ def game_init():
                   {'x': gStartx - 2, 'y': gStarty}]
     gDirection = RIGHT
         
+    #pygame.mixer.music.load('guile.mp3')
+    #pygame.mixer.music.play(0)
+    
+    
     # Start the gApple in a random place.
     gApple = getRandomLocation();
+    
+
 
 
 def game_update():
@@ -105,12 +117,17 @@ def game_update():
         elif event.type == KEYDOWN:
             if (event.key == K_LEFT or event.key == K_a) and gDirection != RIGHT:
                 gDirection = LEFT
+                effect.play()
+                
             elif (event.key == K_RIGHT or event.key == K_d) and gDirection != LEFT:
                 gDirection = RIGHT
+                effect.play()
             elif (event.key == K_UP or event.key == K_w) and gDirection != DOWN:
                 gDirection = UP
+                effect.play()
             elif (event.key == K_DOWN or event.key == K_s) and gDirection != UP:
                 gDirection = DOWN
+                effect.play()
             elif event.key == K_ESCAPE:
                 terminate()
 
