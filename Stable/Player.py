@@ -19,13 +19,38 @@ class Player:
     playerY = 100;
     position = [playerX,playerY];
     
-    rects = [(8, 13, 20, 23)];
+    #position = [100,100];
+    rects = [
+    (8,13,21,24),(32,13,20,24), #Idle
+    (53,12,26,25),(80,12,21,25),(102,15,22,22), #Running
+    (127,13,31,24), #Running Punch
+    (164,12,19,30),(188,11,22,31),(211,12,28,30), #Jumping
+    (8,40,21,24), #Idle (Attack)
+    (32,40,23,24),(57,40,28,24), #Normal Attack
+    (88,39,25,30),(115,39,28,30), #Jump Attack
+    (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
+    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+    ];
+    #spriteSheet = None;
+    #image = None;
+    
+    AnimCounter = None;
+    
+    #rects = [(8, 13, 20, 23)];
     displaySurface = None;
     bolt = None
 
     
     def __init__(self):
         self.data = []
+        #self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
+        
+
+        
+        
+    def changeFrame(self,n): 
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[n]));
+        self.image = pygame.transform.scale2x(self.image);
 
     def main(self):
         self.update();
@@ -33,6 +58,9 @@ class Player:
         
     def init(self,boltIn):
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
+        self.spriteSheet.set_colorkey((255,0,255));
+        self.AnimCounter = 0.0;
+        self.changeFrame(0);
         #objSurf.set_colorkey((0,162,232));
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
         self.bolt = boltIn
@@ -45,6 +73,22 @@ class Player:
     
     def MoveY(self,by):
         self.position[1]=self.position[1]+by;
+        
+        
+    def Run(self,speed):
+        self.AnimCounter+=speed;
+        if(speed > 0 and self.AnimCounter > 2):
+            self.AnimCounter = 0;
+        if(speed < 0 and self.AnimCounter < 0):
+            self.AnimCounter = 2;
+        self.changeFrame(2+int(self.AnimCounter));
+        
+    def Idle(self,speed):
+        self.AnimCounter+=speed;
+        if(speed > 0 and self.AnimCounter > 2):
+            self.AnimCounter = 0;
+        
+        self.changeFrame(int(self.AnimCounter));
     #Functions
     #def init(self):
     #global CLOCK, VIEWPORT, FONT
@@ -60,15 +104,23 @@ class Player:
                
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
+            self.Run(-0.1);
+            self.image = pygame.transform.flip(self.image, True, False)
             self.MoveX(-1);
-        if(pygame.key.get_pressed()[pygame.K_RIGHT]):
+        elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
+            self.Run(0.1);
             self.MoveX(1);
-        if(pygame.key.get_pressed()[pygame.K_UP]):
+        elif(pygame.key.get_pressed()[pygame.K_UP]):
             self.MoveY(-1);
-        if(pygame.key.get_pressed()[pygame.K_DOWN]):
+        elif(pygame.key.get_pressed()[pygame.K_DOWN]):
             self.MoveY(1);
-        if(pygame.key.get_pressed()[pygame.K_SPACE]):
+        elif(pygame.key.get_pressed()[pygame.K_SPACE]):
             self.bolt.fire(self.position[0],self.position[1])
+        else:
+            self.Idle(0.08);
+        
+        #if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
+        #   self.changeFrame(11);
 
         return;
         

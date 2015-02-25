@@ -9,10 +9,10 @@ Created using Pygame
 
 '''
 
-import pygame, sys, Player, HadoukenBolt, platform
+import pygame, sys, Player, HadoukenBolt, platform, Menu
 from pygame.locals import *
 
-FPS = 15
+FPS = 60
 WINDOWWIDTH = 640
 WINDOWHEIGHT = 480
 
@@ -40,6 +40,9 @@ player = Player.Player()
 global bolt;
 bolt = HadoukenBolt.HadoukenBolt()
 
+global menu;
+menu = Menu.Menu()
+
 #global platform;
 #platform = platform.Platform()
 
@@ -63,6 +66,7 @@ def init():
    
     bolt.init()
     player.init(bolt)
+    menu.init()
     platforms[0].init(100, 200, 5)
     platforms[1].init(200, 300, 4)
     platforms[2].init(500, 200, 3)
@@ -101,6 +105,14 @@ def game_update():
 
 def game_render():
     DISPLAYSURF.fill(BGCOLOR)
+    if(menu.StartMenu == True and menu.CharacterSelectionMenu == False):
+        menu.renderMenu(DISPLAYSURF);
+        menu.renderMenutext(DISPLAYSURF);
+    elif(menu.CharacterSelectionMenu == True and menu.StartMenu == False):
+        menu.CharacterChRender(DISPLAYSURF);
+        menu.renderCharacterChText(DISPLAYSURF);
+    
+    
     player.render(DISPLAYSURF)
     bolt.render(DISPLAYSURF)
     for x in range (0, 8):
