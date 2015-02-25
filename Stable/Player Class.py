@@ -21,20 +21,28 @@ BGCOLOR = BLACK
 
 class Menu:
     spriteSheet = None;
+    background = None;
+    
     image = None;
+    backImage = None;
+    
     position = [(DISPLAY_WIDTH/2) - 140, 50];
     MenuRect = [(0, 0, 280, 233)];
     ChooseChRect = [(0, 175, 575, 195)];
+    BackgroundRect = [(0, 0, 640, 480)];
     StartMenu = True;
     CharacterSelectionMenu = False;
     
     def init(self):
+        self.background = pygame.image.load("Images/Background.png").convert();
         self.spriteSheet = pygame.image.load("Images/MenuHolder.png").convert();
+        self.spriteSheet.set_colorkey((255,0,255));
         #objSurf.set_colorkey((0,162,232));
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.ChooseChRect[0]));
-        #self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
+        self.backImage = self.background.subsurface(pygame.Rect(self.BackgroundRect[0]));
  
     def renderMenu(self,displaySurface):
+        displaySurface.blit(self.backImage,self.backImage.get_rect(topleft = (0,0)));
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
         
     #will render the text for the Menu
@@ -58,6 +66,7 @@ class Menu:
     
     #will render the Character Selection Menu
     def CharacterChRender(self, displaySurface):
+        displaySurface.blit(self.backImage,self.backImage.get_rect(topleft = (0,0)));
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
         
     #will render the Character Selection Menu's text
