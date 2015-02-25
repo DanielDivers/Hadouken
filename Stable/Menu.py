@@ -1,3 +1,18 @@
+import pygame, sys
+from pygame.locals import *
+
+DISPLAY_WIDTH = 640;
+DISPLAY_HEIGHT = 480;
+
+#             R    G    B
+WHITE     = (255, 255, 255)
+BLACK     = (  0,   0,   0)
+RED       = (255,   0,   0)
+GREEN     = (  0, 255,   0)
+DARKGREEN = (  0, 155,   0)
+DARKGRAY  = ( 40,  40,  40)
+BGCOLOR = BLACK
+
 class Menu:
 
     #will contain the whole loaded image
