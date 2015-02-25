@@ -15,9 +15,13 @@ FPS_TARGET = 60;
 class Player:
     spriteSheet = None;
     image = None;
-    position = [100,100];
+    playerX = 100;
+    playerY = 100;
+    position = [playerX,playerY];
+    
     rects = [(8, 13, 20, 23)];
     displaySurface = None;
+    bolt = None
 
     
     def __init__(self):
@@ -27,10 +31,11 @@ class Player:
         self.update();
         #self.render();
         
-    def init(self):
+    def init(self,boltIn):
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         #objSurf.set_colorkey((0,162,232));
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.bolt = boltIn
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
@@ -62,6 +67,8 @@ class Player:
             self.MoveY(-1);
         if(pygame.key.get_pressed()[pygame.K_DOWN]):
             self.MoveY(1);
+        if(pygame.key.get_pressed()[pygame.K_SPACE]):
+            self.bolt.fire(self.position[0],self.position[1])
 
         return;
         
