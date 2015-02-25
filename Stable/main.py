@@ -40,14 +40,14 @@ player = Player.Player()
 global bolt;
 bolt = HadoukenBolt.HadoukenBolt()
 
-global platform;
-platform = platform.Platform()
+#global platform;
+#platform = platform.Platform()
 
 
 platforms = []
 
 for x in range(0, 100):
-    platforms.append(platform)
+    platforms.append(platform.Platform())
 
 
 def main():
@@ -63,6 +63,18 @@ def init():
    
     bolt.init()
     player.init(bolt)
+    platforms[0].init(100, 100, 10)
+    #for x in range(0, 10):
+    ''' platforms[0].init(100 + 20, 100)
+    platforms[1].init(100 + 40, 100)
+    platforms[2].init(100 + 60, 100)
+    platforms[3].init(100 + 80, 100)
+    platforms[4].init(100 + 100, 100)
+    platforms[5].init(100 + 120, 100)
+    platforms[6].init(100 + 140, 100)
+    platforms[7].init(100 + 160, 100)
+    platforms[8].init(0 + 180, 100) '''
+    
     
 
 def runGame():
@@ -82,10 +94,13 @@ def game_update():
     player.update()
     bolt.update()
 
+
 def game_render():
     DISPLAYSURF.fill(BGCOLOR)
     player.render(DISPLAYSURF)
     bolt.render(DISPLAYSURF)
+    for x in range (0, 8):
+        platforms[x].render(DISPLAYSURF)
     pygame.display.update()
     FPSCLOCK.tick(FPS)
 

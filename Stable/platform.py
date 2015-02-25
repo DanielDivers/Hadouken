@@ -3,21 +3,28 @@ from pygame.locals import *
 
 class Platform:
     spriteSheet = None
-    image = None;
+    image = None
     platformX = None
     platformY = None
     position = [platformX, platformY]
     rects = [(2,1, 25,24 )]
     displaySurface = None;
+    length = 0
     
     def __init__(self):
         self.data = []
         
-    def init(self, initPosX, initPosY):
+    def init(self, initPosX, initPosY, lengthIn):
         self.spriteSheet = pygame.image.load("Images/platform.png").convert()
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]))
         self.position = [initPosX, initPosY]
+        self.length = lengthIn
         
     def render(self, displaySurface):
-        displaySurface.blit(self.image, self.image.get_rect(topleft = self.position))
+        x=0
+        localPos = self.position
+        while x < self.length:
+            localPos = [localPos[0]*(x+1), localPos[1]]
+            displaySurface.blit(self.image, self.image.get_rect(topleft = localPos))
+            x+=1
      
