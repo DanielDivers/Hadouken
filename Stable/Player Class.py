@@ -1,5 +1,5 @@
 #Basic Python Test Using PyGame
- 
+ #execfile("Player Class.py")
 import pygame, sys
 from pygame.locals import *
  
@@ -25,6 +25,8 @@ class Menu:
     position = [(DISPLAY_WIDTH/2) - 140, 50];
     MenuRect = [(0, 0, 280, 233)];
     ChooseChRect = [(0, 175, 575, 195)];
+    StartMenu = True;
+    CharacterSelectionMenu = False;
     
     def init(self):
         self.spriteSheet = pygame.image.load("Images/MenuHolder.png").convert();
@@ -32,11 +34,11 @@ class Menu:
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.ChooseChRect[0]));
         #self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
  
-    def render(self,displaySurface):
+    def renderMenu(self,displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
         
     #will render the text for the Menu
-    def rendertext(self, displaySurface):
+    def renderMenutext(self, displaySurface):
         MenuFont = pygame.font.Font('freesansbold.ttf', 25);
         StartSurf = MenuFont.render('Start Game', True, WHITE);
         ChooseChSurf = MenuFont.render('Choose Character', True, WHITE);
@@ -57,7 +59,27 @@ class Menu:
     #will render the Character Selection Menu
     def CharacterChRender(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
-    #will switch UV's to the Character Selections
+        
+    #will render the Character Selection Menu's text
+    def renderCharacterChText(self, displaySurface):
+        MenuFont = pygame.font.Font('freesansbold.ttf', 25);
+        RyuSurf = MenuFont.render('Ryu', True, WHITE);
+        DarkRyuSurf = MenuFont.render('Dark Ryu', True, WHITE);
+        FlashRyuSurf = MenuFont.render('Flash Ryu', True, WHITE);
+        
+        RyuRect = RyuSurf.get_rect();
+        DarkRyuRect = DarkRyuSurf.get_rect();
+        FlashRyuRect = FlashRyuSurf.get_rect();
+        
+        RyuRect.midtop = (DISPLAY_WIDTH / 4, DISPLAY_HEIGHT/2 - 25);
+        DarkRyuRect.midtop = (3*(DISPLAY_WIDTH/4) - 20, DISPLAY_HEIGHT/2 - 25);
+        FlashRyuRect.midtop = (DISPLAY_WIDTH / 2 - 5, 3*(DISPLAY_HEIGHT/4) - 7);
+        
+        displaySurface.blit(RyuSurf, RyuRect);
+        displaySurface.blit(DarkRyuSurf, DarkRyuRect);
+        displaySurface.blit(FlashRyuSurf, FlashRyuRect);
+        
+    #wilExitSurf = MenuFont.render('Exit', True, WHITE);l switch UV's to the Character Selections
     def ChangeToChooseCh(self, displaySurface):
         self.position = [25, 200];
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.ChooseChRect[0]));
@@ -65,6 +87,7 @@ class Menu:
     def ChangeToMenu(self, displaySurface):
         self.position = [(DISPLAY_WIDTH/2) - 140, 50];
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
+    
         
 class Player:
     
@@ -93,7 +116,6 @@ class Player:
 def main():
         pygame.init();
         init();
-        menu.ChangeToMenu(VIEWPORT);
         while True:
                 update();
                 render();
@@ -126,6 +148,14 @@ def update():
                 if(event.type == KEYDOWN):
                         if(event.key == K_ESCAPE):
                                 close();
+                        if(event.key == K_UP):
+                            menu.CharacterSelectionMenu = True;
+                            menu.StartMenu = False;
+                            menu.ChangeToChooseCh(VIEWPORT);
+                        if(event.key == K_DOWN):
+                            menu.CharacterSelectionMenu = False;
+                            menu.StartMenu = True;
+                            menu.ChangeToMenu(VIEWPORT);
        
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
@@ -148,10 +178,15 @@ def render():
         #Draw Object
         #VIEWPORT.blit(player_image,player_image.get_rect(topleft = objPos));
         player.render(VIEWPORT);
-        #menu.render(VIEWPORT);
-        #menu.rendertext(VIEWPORT);
-        menu.CharacterChRender(VIEWPORT);
         
+        if(menu.StartMenu == True and menu.CharacterSelectionMenu == False):
+            menu.renderMenu(VIEWPORT);
+            menu.renderMenutext(VIEWPORT);
+        elif(menu.CharacterSelectionMenu == True and menu.StartMenu == False):
+            menu.CharacterChRender(VIEWPORT);
+            menu.renderCharacterChText(VIEWPORT);
+        
+            
         #Updates The Display
         pygame.display.update();
        
