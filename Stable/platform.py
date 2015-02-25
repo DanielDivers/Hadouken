@@ -24,7 +24,8 @@ class Platform:
         x=0
         localPos = self.position
         while x < self.length:
-            localPos = [localPos[0]*(x+1), localPos[1]]
+            #newX = 24*x
+            localPos = [self.position[0] + (24*x), localPos[1]]
             displaySurface.blit(self.image, self.image.get_rect(topleft = localPos))
             x+=1
      

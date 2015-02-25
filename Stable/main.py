@@ -63,7 +63,11 @@ def init():
    
     bolt.init()
     player.init(bolt)
-    platforms[0].init(100, 100, 10)
+    platforms[0].init(100, 200, 5)
+    platforms[1].init(200, 300, 4)
+    platforms[2].init(500, 200, 3)
+    platforms[3].init(100, 500, 2)
+    platforms[4].init(100, 600, 1)
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
