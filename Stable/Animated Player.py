@@ -18,6 +18,13 @@ class Player:
     rects = [
     (8,13,21,24),(32,13,20,24), #Idle
     (53,12,26,25),(80,12,21,25),(102,15,22,22), #Running
+    (127,13,31,24), #Running Punch
+    (164,12,19,30),(188,11,22,31),(211,12,28,30), #Jumping
+    (8,40,21,24), #Idle (Attack)
+    (32,40,23,24),(57,40,28,24), #Normal Attack
+    (88,39,25,30),(115,39,28,30), #Jump Attack
+    (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
+    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
     ];
     spriteSheet = None;
     image = None;
@@ -26,12 +33,13 @@ class Player:
     
     def __init__(self):
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
-        #objSurf.set_colorkey((0,162,232));
+        self.spriteSheet.set_colorkey((0,255,0));
         self.AnimCounter = 0.0;
         self.changeFrame(0);    
         
     def changeFrame(self,n): 
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[n]));
+        self.image = pygame.transform.scale2x(self.image);
 
     def render(self,displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
@@ -43,6 +51,13 @@ class Player:
         if(speed < 0 and self.AnimCounter < 0):
             self.AnimCounter = 2;
         self.changeFrame(2+int(self.AnimCounter));
+        
+    def Idle(self,speed):
+        self.AnimCounter+=speed;
+        if(speed > 0 and self.AnimCounter > 2):
+            self.AnimCounter = 0;
+        
+        self.changeFrame(int(self.AnimCounter));
         
 
     def MoveX(self,by):
@@ -90,21 +105,27 @@ def update():
             if(event.key == K_ESCAPE):
                 close();
                 
-                
+
 
     #Make Object Controllable
     if(pygame.key.get_pressed()[pygame.K_LEFT]):
-        player.Run(-0.08);
+        player.Run(-0.1);
         player.image = pygame.transform.flip(player.image,True,False);
         player.MoveX(-1);
-    if(pygame.key.get_pressed()[pygame.K_RIGHT]):
-        player.Run(0.08);
+    elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
+        player.Run(0.1);
         #player.image = pygame.transform.flip(player.image,True,False);
         player.MoveX(1);
+    else:
+        player.Idle(0.08);
+        
     if(pygame.key.get_pressed()[pygame.K_UP]):
         player.MoveY(-1);
     if(pygame.key.get_pressed()[pygame.K_DOWN]):
         player.MoveY(1);
+        
+    if(player.image.get_rect(topleft = player.position).collidepoint(300,100)):
+        player.changeFrame(11);
 
     return;
 
