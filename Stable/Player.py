@@ -21,15 +21,16 @@ class Player:
     
     #position = [100,100];
     rects = [
-    (8,13,21,24),(32,13,20,24), #Idle
-    (53,12,26,25),(80,12,21,25),(102,15,22,22), #Running
-    (127,13,31,24), #Running Punch
-    (164,12,19,30),(188,11,22,31),(211,12,28,30), #Jumping
-    (8,40,21,24), #Idle (Attack)
-    (32,40,23,24),(57,40,28,24), #Normal Attack
-    (88,39,25,30),(115,39,28,30), #Jump Attack
-    (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
-    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+    (2,7,21,25),(26,7,20,25), #Idle
+    (47,9,26,23),(74,7,22,25),(100,9,22,23), #Running
+    (125,7,31,25), #Running Punch
+    (160,3,19,30),(181,1,22,32),(206,2,28,31), #Jumping
+    (2,38,21,25), #Idle (Attack)
+    (24,38,23,25),(50,38,28,25), #Normal Attack
+    (80,34,25,31),(107,34,28,31), #Jump Attack
+    (137,40,18,11),(158,40,20,11),(145,54,24,13), #Fireball (Color 1)
+    (188,46,18,13),(171,65,20,11),(194,65,24,13), #Fireball (Color 2)
+    (207,39,16,24) #Special Fireball (Ken Only) 
     ];
     #spriteSheet = None;
     #image = None;
@@ -57,7 +58,7 @@ class Player:
         #self.render();
         
     def init(self,boltIn):
-        self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
+        self.spriteSheet = pygame.image.load("Images/E.Ryu.png").convert();
         self.spriteSheet.set_colorkey((255,0,255));
         self.AnimCounter = 0.0;
         self.changeFrame(0);
@@ -104,7 +105,7 @@ class Player:
                
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
-            self.Run(-0.1);
+            self.Run(0.1);
             self.image = pygame.transform.flip(self.image, True, False)
             self.MoveX(-1);
         elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
