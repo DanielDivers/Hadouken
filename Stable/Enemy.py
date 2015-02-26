@@ -8,6 +8,8 @@ class Enemy:
     enemyY = None
     position = [enemyX, enemyY]
     
+    rect = []
+    
     #anim rects
     rects = [
     (0,134,42,25),(49,133,43,23), #Charging
@@ -34,7 +36,9 @@ class Enemy:
         self.AnimCounter = 0.0
         self.changeFrame(0)
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]))
+        self.rect = self.image.get_rect()
         self.position = [posXIn, posYIn]
+        self.rect.topleft = self.position
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position))
@@ -72,6 +76,7 @@ class Enemy:
         self.changeFrame(int(self.AnimCounter));       
         
     def update(self):
+        self.rect.topleft = self.position
         self.Walk(0.1)
         return
         

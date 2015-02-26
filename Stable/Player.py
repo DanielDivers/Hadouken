@@ -19,6 +19,7 @@ class Player:
     playerY = 100;
     position = [playerX,playerY];
     
+    rect = []
     #position = [100,100];
     rects = [
     (2,7,21,25),(26,7,20,25), #Idle
@@ -64,6 +65,8 @@ class Player:
         self.changeFrame(0);
         #objSurf.set_colorkey((0,162,232));
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
         self.bolt = boltIn
         
     def render(self, displaySurface):
@@ -102,7 +105,7 @@ class Player:
     def update(self):
         #Update Function
         #Handle Events
-               
+        self.rect.topleft = self.position
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
             self.Run(0.1);

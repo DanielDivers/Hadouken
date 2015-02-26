@@ -76,6 +76,9 @@ def init():
     platforms[2].init(100, 300, 3)
     platforms[3].init(100, 350, 2)
     platforms[4].init(100, 400, 1)
+    
+    print(player.rect)
+    print(enemy.rect)
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
@@ -106,8 +109,19 @@ def game_update():
     player.update()
     bolt.update()
     enemy.update()
-    enemy.MoveX(-1)
-
+    #print(pygame.sprite.collide_rect(player, enemy))
+    #enemy.MoveX(-1)
+    
+    #---------COLLISION DETECTION
+    #if pygame.sprite.collide_mask(player,enemy):
+    #    enemy.MoveX(1)
+    #else:
+     #   enemy.MoveX(-1)
+    
+   # if (pygame.sprite.collide_mask(bolt, enemy):
+    enemy.Die()
+    
+    #---------
 
 def game_render():
     DISPLAYSURF.fill(BGCOLOR)
