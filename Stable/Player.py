@@ -20,6 +20,7 @@ class Player:
     position = [playerX,playerY];
     
     #position = [100,100];
+
     
     
     Ryu = [
@@ -32,6 +33,7 @@ class Player:
     (88,39,25,30),(115,39,28,30), #Jump Attack
     (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+
     ];
     
     DarkRyu = [
@@ -71,7 +73,7 @@ class Player:
         #self.render();
         
     def init(self,boltIn):
-        self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
+        self.spriteSheet = pygame.image.load("Images/E.Ryu.png").convert();
         self.spriteSheet.set_colorkey((255,0,255));
         self.AnimCounter = 0.0;
         self.changeFrame(0);
@@ -118,7 +120,7 @@ class Player:
                
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
-            self.Run(-0.1);
+            self.Run(0.1);
             self.image = pygame.transform.flip(self.image, True, False)
             self.MoveX(-1);
         elif(pygame.key.get_pressed()[pygame.K_RIGHT]):

@@ -34,9 +34,9 @@ class Menu:
     position = [(DISPLAY_WIDTH/2) - 140, 50];
     
     #UV's 
-    RyuImageUV = [(8, 13, 20, 23)];
-    DarkRyuImageUV = [(7, 82, 20, 23)];
-    FlashRyuImageUV = [(7, 152, 20, 23)]
+    spriteImageUV = [(26, 7, 20, 25)];
+    #DarkRyuImageUV = [(7, 82, 20, 23)];
+    #FlashRyuImageUV = [(7, 152, 20, 23)]
     MenuRect = [(0, 0, 280, 233)];
     ChooseChRect = [(0, 175, 575, 195)];
     BackgroundRect = [(0, 0, 640, 480)];
@@ -47,25 +47,27 @@ class Menu:
     
     def init(self):
         #load in the images
-        self.background = pygame.image.load("Images/Background.png").convert();
-        self.spriteSheet = pygame.image.load("Images/MenuHolder.png").convert();
-        self.RyuSprites  = pygame.image.load("Images/Ryu.png").convert();
+		self.background = pygame.image.load("Images/Background.png").convert();
+		self.spriteSheet = pygame.image.load("Images/MenuHolder.png").convert();
+		self.DarkSprites  = pygame.image.load("Images/E.Ryu.png").convert();
+		self.RyuSprites  = pygame.image.load("Images/Ryu.png").convert();
+		self.FlashSprites  = pygame.image.load("Images/Ken.png").convert();
         
-        #make these colours not be drawn for the corresponding Image
-        self.RyuSprites.set_colorkey((255,0,255));
-        self.spriteSheet.set_colorkey((255,0,255));
+		#make these colours not be drawn for the corresponding Image
+		self.RyuSprites.set_colorkey((255,0,255));
+		self.spriteSheet.set_colorkey((255,0,255));
         
-        #Cut the loaded images with Specified UV's and store it
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
-        self.backImage = self.background.subsurface(pygame.Rect(self.BackgroundRect[0]));
-        self.RyuImage = self.RyuSprites.subsurface(pygame.Rect(self.RyuImageUV[0]));
-        self.DarkRyuImage = self.RyuSprites.subsurface(pygame.Rect(self.DarkRyuImageUV[0]));
-        self.FlashRyuImage = self.RyuSprites.subsurface(pygame.Rect(self.FlashRyuImageUV[0]));
-        
-        #Scale the Sprites
-        self.RyuImage = pygame.transform.scale2x(self.RyuImage);
-        self.DarkRyuImage = pygame.transform.scale2x(self.DarkRyuImage)
-        self.FlashRyuImage = pygame.transform.scale2x(self.FlashRyuImage)
+		#Cut the loaded images with Specified UV's and store it
+		self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
+		self.backImage = self.background.subsurface(pygame.Rect(self.BackgroundRect[0]));
+		self.RyuImage = self.RyuSprites.subsurface(pygame.Rect(self.spriteImageUV[0]));
+		self.DarkRyuImage = self.DarkSprites.subsurface(pygame.Rect(self.spriteImageUV[0]));
+		self.FlashRyuImage = self.FlashSprites.subsurface(pygame.Rect(self.spriteImageUV[0]));
+
+		#Scale the Sprites
+		self.RyuImage = pygame.transform.scale2x(self.RyuImage);
+		self.DarkRyuImage = pygame.transform.scale2x(self.DarkRyuImage)
+		self.FlashRyuImage = pygame.transform.scale2x(self.FlashRyuImage)
  
     #renders the main menu
     def renderMenu(self,displaySurface):

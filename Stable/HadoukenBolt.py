@@ -8,11 +8,12 @@ class HadoukenBolt:
     boltX = 140
     boltY = 110
     position = [boltX, boltY];
+
     
     RyuBolt = [(149, 43, 19, 12),(169, 43, 21, 12),(158, 57, 25, 14)];
     
     DarkRyuBolt = [(145,114,17,11),(165,114,20,11),(153,128,24,13)];
-    
+
     displaySurface = None;
     hasFired = False
     speed = 5
@@ -30,10 +31,12 @@ class HadoukenBolt:
         self.image = pygame.transform.scale2x(self.image);
     
     def init(self):
+
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         self.spriteSheet.set_colorkey((255,0,255));
         self.changeFrame(0);
         self.hasFired = False
+
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
