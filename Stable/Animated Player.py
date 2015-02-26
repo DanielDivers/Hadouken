@@ -26,8 +26,22 @@ class Player:
     (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
     ];
+    
+    DarkRyu = [
+    (7,82,21,24),(31,82,20,24), #Idle
+    (52,83,26,25),(79,82,21,25),(101,84,22,22), #Running
+    (126,82,31,24), #Running Punch
+    (161,81,19,30),(185,80,22,31),(208,81,28,30), #Jumping
+    (7,110,21,24), #Idle (Attack)
+    (30,110,23,24),(55,110,28,24), #Normal Attack
+    (87,109,25,30),(114,109,28,30), #Jump Attack
+    (145,114,17,11),(165,114,20,11),(153,128,24,13), #Fireball (Color 1)
+    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+    ];
+    
     spriteSheet = None;
     image = None;
+   
     
     AnimCounter = None;
     
@@ -38,7 +52,7 @@ class Player:
         self.changeFrame(0);    
         
     def changeFrame(self,n): 
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[n]));
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.DarkRyu[n]));
         self.image = pygame.transform.scale2x(self.image);
 
     def render(self,displaySurface):

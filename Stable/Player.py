@@ -20,7 +20,9 @@ class Player:
     position = [playerX,playerY];
     
     #position = [100,100];
-    rects = [
+    
+    
+    Ryu = [
     (8,13,21,24),(32,13,20,24), #Idle
     (53,12,26,25),(80,12,21,25),(102,15,22,22), #Running
     (127,13,31,24), #Running Punch
@@ -31,8 +33,23 @@ class Player:
     (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
     ];
+    
+    DarkRyu = [
+    (7,82,21,24),(31,82,20,24), #Idle
+    (52,83,26,25),(79,82,21,25),(101,84,22,22), #Running
+    (126,82,31,24), #Running Punch
+    (161,81,19,30),(185,80,22,31),(208,81,28,30), #Jumping
+    (7,110,21,24), #Idle (Attack)
+    (30,110,23,24),(55,110,28,24), #Normal Attack
+    (87,109,25,30),(114,109,28,30), #Jump Attack
+    (145,114,17,11),(165,114,20,11),(153,128,24,13), #Fireball (Color 1)
+    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+    ];
+    
     #spriteSheet = None;
     #image = None;
+    
+    RyuType = Ryu;
     
     AnimCounter = None;
     
@@ -45,11 +62,8 @@ class Player:
         self.data = []
         #self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         
-
-        
-        
     def changeFrame(self,n): 
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[n]));
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[n]));
         self.image = pygame.transform.scale2x(self.image);
 
     def main(self):
@@ -62,7 +76,7 @@ class Player:
         self.AnimCounter = 0.0;
         self.changeFrame(0);
         #objSurf.set_colorkey((0,162,232));
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
         self.bolt = boltIn
         
     def render(self, displaySurface):
@@ -116,11 +130,12 @@ class Player:
             self.MoveY(1);
         elif(pygame.key.get_pressed()[pygame.K_SPACE]):
             self.bolt.fire(self.position[0],self.position[1])
+            self.changeFrame(11)
         else:
             self.Idle(0.08);
         
         #if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
-        #   self.changeFrame(11);
+        #   ;
 
         return;
         

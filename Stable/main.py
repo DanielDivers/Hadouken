@@ -87,6 +87,8 @@ def init():
 
 def runGame():
     #game_init()
+    player.RyuType = player.Ryu;
+    
     while True:
         game_update()
         game_render()
