@@ -73,7 +73,7 @@ class Player:
         #self.render();
         
     def init(self,boltIn):
-        self.spriteSheet = pygame.image.load("Images/E.Ryu.png").convert();
+        self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         self.spriteSheet.set_colorkey((255,0,255));
         self.AnimCounter = 0.0;
         self.changeFrame(0);

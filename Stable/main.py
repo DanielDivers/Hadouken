@@ -45,7 +45,12 @@ menu = Menu.Menu()
 
 #global platform;
 #platform = platform.Platform()
+MenuState = 0;
+ChooseChState = 1;
+PlayState = 2;
 
+global State;
+State = MenuState;
 
 platforms = []
 
@@ -59,7 +64,7 @@ def main():
     runGame()
 
 def init():
-    global FPSCLOCK, DISPLAYSURF
+    global FPSCLOCK, DISPLAYSURF 
     
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
@@ -86,41 +91,86 @@ def init():
     
 
 def runGame():
+    global State;
+    State = MenuState;
+    
     #game_init()
-    player.RyuType = player.Ryu;
+    #player.RyuType = player.DarkRyu;
     
     while True:
-        game_update()
-        game_render()
+       if(State == MenuState or State == ChooseChState): 
+            MenuRender();
+            MenuUpdate();
+            
+       elif(State == PlayState):  
+            game_update()
+            game_render()
 
 #def game_init():
 
 def game_update():
+    player.update()
+    bolt.update()
+ 
+   
+def MenuUpdate():
+    global State;
+    
+    if(State == MenuState):
+        for event in pygame.event.get(): # event handling loop
+            if event.type == QUIT:
+                terminate()
+            if pygame.mouse.get_pressed()[0]:
+                MousePos = pygame.mouse.get_pos()
+                
+                #if(MousePos[0] > 180 and MousePos[0] < 445 and MousePos[1] > 45 and MousePos[1] < 205):
+                    #State = PlayState;
+                    
+                #if clicked on Start Game
+                if(pygame.Rect(180,50,255,35).collidepoint(MousePos)):
+                    State = PlayState;
+                if(pygame.Rect(180,175,255,35).collidepoint(MousePos)):
+                    State = ChooseChState;
+                    menu.ChangeToChooseCh(DISPLAYSURF);
+                if(pygame.Rect(180,225,255,35).collidepoint(MousePos)):
+                    terminate();
+                    
+    if(State == ChooseChState):
+        for event in pygame.event.get(): # event handling loop
+            if event.type == QUIT:
+                terminate()
+    
 
+def MenuRender():
+    #Main Menu State
+    if(State == MenuState):
+        menu.renderMenu(DISPLAYSURF);
+        menu.renderMenutext(DISPLAYSURF);
+        
+    #Character Selection State
+    elif(State == ChooseChState):
+        menu.CharacterChRender(DISPLAYSURF);
+        menu.renderCharacterChText(DISPLAYSURF);
+        
+    pygame.display.update()
+        
+def game_render():
+
+    DISPLAYSURF.fill(BGCOLOR)
+    #Game Running 
+    player.render(DISPLAYSURF)
+    
+    bolt.render(DISPLAYSURF)
+    
+    for x in range (0, 8):
+        platforms[x].render(DISPLAYSURF)
+        
+    pygame.display.update()
+    FPSCLOCK.tick(FPS)
+    
     for event in pygame.event.get(): # event handling loop
         if event.type == QUIT:
             terminate()
-            
-    player.update()
-    bolt.update()
-
-
-def game_render():
-    DISPLAYSURF.fill(BGCOLOR)
-    if(menu.StartMenu == True and menu.CharacterSelectionMenu == False):
-        menu.renderMenu(DISPLAYSURF);
-        menu.renderMenutext(DISPLAYSURF);
-    elif(menu.CharacterSelectionMenu == True and menu.StartMenu == False):
-        menu.CharacterChRender(DISPLAYSURF);
-        menu.renderCharacterChText(DISPLAYSURF);
-    
-    
-    player.render(DISPLAYSURF)
-    bolt.render(DISPLAYSURF)
-    for x in range (0, 8):
-        platforms[x].render(DISPLAYSURF)
-    pygame.display.update()
-    FPSCLOCK.tick(FPS)
 
 def terminate():
     pygame.quit()
