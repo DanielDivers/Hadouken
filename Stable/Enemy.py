@@ -7,6 +7,7 @@ class Enemy:
     enemyX = None
     enemyY = None
     position = [enemyX, enemyY]
+    dying = False
     
     rect = []
     
@@ -58,7 +59,7 @@ class Enemy:
             self.AnimCounter = 0
         if (speed < 0 and self.AnimCounter < 0):
             self.AnimCounter = 3
-        self.changeFrame(int(self.AnimCounter))
+        self.changeFrame(2+int(self.AnimCounter))
         
     def Charge(self,speed):
         self.AnimCounter += speed
@@ -66,14 +67,15 @@ class Enemy:
             self.AnimCounter = 0
         if (speed < 0 and self.AnimCounter < 0):
             self.AnimCounter = 2
-        self.changeFrame(2+int(self.AnimCounter))
+        self.changeFrame(int(self.AnimCounter))
         
     def Die(self,speed):
+        self.dying = True
         self.AnimCounter+=speed;
         if(speed > 0 and self.AnimCounter > 2):
             self.AnimCounter = 0;
         
-        self.changeFrame(int(self.AnimCounter));       
+        self.changeFrame(5 + int(self.AnimCounter));       
         
     def update(self):
         self.rect.topleft = self.position

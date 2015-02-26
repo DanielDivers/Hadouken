@@ -64,21 +64,28 @@ def main():
 def init():
     global FPSCLOCK, DISPLAYSURF
     
+    
+    pygame.mixer.music.load('guile.mp3')
+    pygame.mixer.music.play(0)
+    
+    
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
    
     bolt.init()
     player.init(bolt)
     menu.init()
-    enemy.init(200, 200)
+    enemy.init(600, 200)
     platforms[0].init(100, 200, 5)
     platforms[1].init(100, 250, 4)
+    platforms[2].init(100, 300, 3)
     platforms[2].init(100, 300, 3)
     platforms[3].init(100, 350, 2)
     platforms[4].init(100, 400, 1)
     
     print(player.rect)
     print(enemy.rect)
+    print(platforms[0].rect)
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
@@ -89,6 +96,8 @@ def init():
     platforms[6].init(100 + 140, 100)
     platforms[7].init(100 + 160, 100)
     platforms[8].init(0 + 180, 100) '''
+    
+    
     
     
 
@@ -106,9 +115,10 @@ def game_update():
         if event.type == QUIT:
             terminate()
             
-    player.update()
+    player.update(effect)
     bolt.update()
     enemy.update()
+    
     #print(pygame.sprite.collide_rect(player, enemy))
     #enemy.MoveX(-1)
     
@@ -116,11 +126,17 @@ def game_update():
     #if pygame.sprite.collide_mask(player,enemy):
     #    enemy.MoveX(1)
     #else:
-     #   enemy.MoveX(-1)
+    #for x in range(0, 5):
+    if pygame.sprite.collide_rect(player, platforms[0]):
+        print('Impact')
     
-   # if (pygame.sprite.collide_mask(bolt, enemy):
-    enemy.Die()
+    if enemy.dying == False:
+        enemy.MoveX(-1)
     
+    if pygame.sprite.collide_mask(bolt, enemy):
+        enemy.Die(0.01)
+        enemy.position[0] = 800 
+        enemy.position[1] = 800         
     #---------
 
 def game_render():

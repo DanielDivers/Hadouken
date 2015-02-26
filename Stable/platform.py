@@ -11,6 +11,7 @@ class Platform:
     displaySurface = None;
     length = 0
     collideLengths = []
+    rect = []
     
     def __init__(self):
         self.data = []
@@ -20,7 +21,12 @@ class Platform:
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]))
         self.position = [initPosX, initPosY]
         self.length = lengthIn
-        collideLength = [25*lengthIn,24]
+        self.collideLengths = [25*lengthIn,24]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
+        self.rect[2] = self.collideLengths[0]
+        self.rect[3] = self.collideLengths[1]
+        #EXTEND SO COLLISIONS HAPPEN ACROSS ALL OF THE PLATFORM
         
     def render(self, displaySurface):
         x=0

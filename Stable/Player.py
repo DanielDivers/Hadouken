@@ -42,6 +42,7 @@ class Player:
     displaySurface = None;
     bolt = None
 
+
     
     def __init__(self):
         self.data = []
@@ -102,7 +103,7 @@ class Player:
     #FONT = pygame.font.Font('freesansbold.ttf',18);
     #pygame.display.set_caption('Simple Game');
     #FontSurface = FONT.render("Test",True,(255,255,255));       
-    def update(self):
+    def update(self, effectIn):
         #Update Function
         #Handle Events
         self.rect.topleft = self.position
@@ -120,6 +121,7 @@ class Player:
             self.MoveY(1);
         elif(pygame.key.get_pressed()[pygame.K_SPACE]):
             self.bolt.fire(self.position[0],self.position[1])
+            effectIn.play()
         else:
             self.Idle(0.08);
         
