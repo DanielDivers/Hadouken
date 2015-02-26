@@ -87,6 +87,9 @@ def update():
                             menu.CharacterSelectionMenu = False;
                             menu.StartMenu = True;
                             menu.ChangeToMenu(VIEWPORT);
+                            
+        if("""not Player Colliding With Rect"""):
+            player.position[0]-=3;
        
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):

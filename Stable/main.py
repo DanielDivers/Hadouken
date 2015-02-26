@@ -9,7 +9,7 @@ Created using Pygame
 
 '''
 
-import pygame, sys, Player, HadoukenBolt, platform, Menu
+import pygame, sys, Player, HadoukenBolt, platform, Menu, Enemy
 from pygame.locals import *
 
 FPS = 60
@@ -43,14 +43,12 @@ bolt = HadoukenBolt.HadoukenBolt()
 global menu;
 menu = Menu.Menu()
 
+global enemy;
+enemy = Enemy.Enemy()
+
 #global platform;
 #platform = platform.Platform()
-MenuState = 0;
-ChooseChState = 1;
-PlayState = 2;
 
-global State;
-State = MenuState;
 
 platforms = []
 
@@ -64,7 +62,7 @@ def main():
     runGame()
 
 def init():
-    global FPSCLOCK, DISPLAYSURF 
+    global FPSCLOCK, DISPLAYSURF
     
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
@@ -72,11 +70,15 @@ def init():
     bolt.init()
     player.init(bolt)
     menu.init()
+    enemy.init(200, 200)
     platforms[0].init(100, 200, 5)
-    platforms[1].init(200, 300, 4)
-    platforms[2].init(500, 200, 3)
-    platforms[3].init(100, 500, 2)
-    platforms[4].init(100, 600, 1)
+    platforms[1].init(100, 250, 4)
+    platforms[2].init(100, 300, 3)
+    platforms[3].init(100, 350, 2)
+    platforms[4].init(100, 400, 1)
+    
+    print(player.rect)
+    print(enemy.rect)
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
@@ -91,86 +93,54 @@ def init():
     
 
 def runGame():
-    global State;
-    State = MenuState;
-    
     #game_init()
-    #player.RyuType = player.DarkRyu;
-    
     while True:
-       if(State == MenuState or State == ChooseChState): 
-            MenuRender();
-            MenuUpdate();
-            
-       elif(State == PlayState):  
-            game_update()
-            game_render()
+        game_update()
+        game_render()
 
 #def game_init():
 
 def game_update():
-    player.update()
-    bolt.update()
- 
-   
-def MenuUpdate():
-    global State;
-    
-    if(State == MenuState):
-        for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT:
-                terminate()
-            if pygame.mouse.get_pressed()[0]:
-                MousePos = pygame.mouse.get_pos()
-                
-                #if(MousePos[0] > 180 and MousePos[0] < 445 and MousePos[1] > 45 and MousePos[1] < 205):
-                    #State = PlayState;
-                    
-                #if clicked on Start Game
-                if(pygame.Rect(180,50,255,35).collidepoint(MousePos)):
-                    State = PlayState;
-                if(pygame.Rect(180,175,255,35).collidepoint(MousePos)):
-                    State = ChooseChState;
-                    menu.ChangeToChooseCh(DISPLAYSURF);
-                if(pygame.Rect(180,225,255,35).collidepoint(MousePos)):
-                    terminate();
-                    
-    if(State == ChooseChState):
-        for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT:
-                terminate()
-    
 
-def MenuRender():
-    #Main Menu State
-    if(State == MenuState):
-        menu.renderMenu(DISPLAYSURF);
-        menu.renderMenutext(DISPLAYSURF);
-        
-    #Character Selection State
-    elif(State == ChooseChState):
-        menu.CharacterChRender(DISPLAYSURF);
-        menu.renderCharacterChText(DISPLAYSURF);
-        
-    pygame.display.update()
-        
-def game_render():
-
-    DISPLAYSURF.fill(BGCOLOR)
-    #Game Running 
-    player.render(DISPLAYSURF)
-    
-    bolt.render(DISPLAYSURF)
-    
-    for x in range (0, 8):
-        platforms[x].render(DISPLAYSURF)
-        
-    pygame.display.update()
-    FPSCLOCK.tick(FPS)
-    
     for event in pygame.event.get(): # event handling loop
         if event.type == QUIT:
             terminate()
+            
+    player.update()
+    player.updateGravity(platforms)
+    bolt.update()
+    enemy.update()
+    #print(pygame.sprite.collide_rect(player, enemy))
+    #enemy.MoveX(-1)
+    
+    #---------COLLISION DETECTION
+    #if pygame.sprite.collide_mask(player,enemy):
+    #    enemy.MoveX(1)
+    #else:
+     #   enemy.MoveX(-1)
+    
+   # if (pygame.sprite.collide_mask(bolt, enemy):
+    #enemy.Die()
+    
+    #---------
+
+def game_render():
+    DISPLAYSURF.fill(BGCOLOR)
+    if(menu.StartMenu == True and menu.CharacterSelectionMenu == False):
+        menu.renderMenu(DISPLAYSURF);
+        menu.renderMenutext(DISPLAYSURF);
+    elif(menu.CharacterSelectionMenu == True and menu.StartMenu == False):
+        menu.CharacterChRender(DISPLAYSURF);
+        menu.renderCharacterChText(DISPLAYSURF);
+    
+    
+    player.render(DISPLAYSURF)
+    bolt.render(DISPLAYSURF)
+    enemy.render(DISPLAYSURF)
+    for x in range (0, 8):
+        platforms[x].render(DISPLAYSURF)
+    pygame.display.update()
+    FPSCLOCK.tick(FPS)
 
 def terminate():
     pygame.quit()

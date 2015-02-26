@@ -22,6 +22,7 @@ class Player:
     #position = [100,100];
 
     
+    rect = []
     
     Ryu = [
     (8,13,21,24),(32,13,20,24), #Idle
@@ -79,7 +80,11 @@ class Player:
         self.changeFrame(0);
         #objSurf.set_colorkey((0,162,232));
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
         self.bolt = boltIn
+        self.rect[3] = self.rect[3]*2
+        self.falling = True
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
@@ -117,7 +122,9 @@ class Player:
     def update(self):
         #Update Function
         #Handle Events
-               
+        
+        self.rect.topleft = self.position;
+        
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
             self.Run(0.1);
@@ -135,12 +142,23 @@ class Player:
             self.changeFrame(11)
         else:
             self.Idle(0.08);
+            
+
         
         #if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
         #   ;
 
         return;
+    
+    
+    def updateGravity(self,platforms):
         
+        for x in range (0,4):
+            if(self.rect.colliderect(platforms[x].position[0],platforms[x].position[1],platforms[x].collideLength[0],platforms[x].collideLength[1])):
+                self.falling = False
+                
+        if(self.falling):        
+            self.MoveY(2);
     '''def render(self, surf):
         #Render Function
         #Clears The Screen
