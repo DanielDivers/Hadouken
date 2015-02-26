@@ -9,7 +9,7 @@ Created using Pygame
 
 '''
 
-import pygame, sys, Player, HadoukenBolt, platform, Menu
+import pygame, sys, Player, HadoukenBolt, platform, Menu, Enemy
 from pygame.locals import *
 
 FPS = 60
@@ -43,6 +43,9 @@ bolt = HadoukenBolt.HadoukenBolt()
 global menu;
 menu = Menu.Menu()
 
+global enemy;
+enemy = Enemy.Enemy()
+
 #global platform;
 #platform = platform.Platform()
 
@@ -67,6 +70,7 @@ def init():
     bolt.init()
     player.init(bolt)
     menu.init()
+    enemy.init(200, 200)
     platforms[0].init(100, 200, 5)
     platforms[1].init(100, 250, 4)
     platforms[2].init(100, 300, 3)
@@ -101,6 +105,8 @@ def game_update():
             
     player.update()
     bolt.update()
+    enemy.update()
+    enemy.MoveX(-1)
 
 
 def game_render():
@@ -115,6 +121,7 @@ def game_render():
     
     player.render(DISPLAYSURF)
     bolt.render(DISPLAYSURF)
+    enemy.render(DISPLAYSURF)
     for x in range (0, 8):
         platforms[x].render(DISPLAYSURF)
     pygame.display.update()
