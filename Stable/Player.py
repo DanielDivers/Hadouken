@@ -18,10 +18,12 @@ class Player:
     playerX = 100;
     playerY = 100;
     position = [playerX,playerY];
+    Right = 0;
+    Left = 1;
     
-    #position = [100,100];
-
-    
+    counter = 0;
+    Fired = False;
+    Facing = Right;
     
     Ryu = [
     (8,13,21,24),(32,13,20,24), #Idle
@@ -33,7 +35,6 @@ class Player:
     (88,39,25,30),(115,39,28,30), #Jump Attack
     (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
-
     ];
     
     DarkRyu = [
@@ -48,21 +49,28 @@ class Player:
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
     ];
     
+    FlashRyu = [
+    (7,152,21,24),(31,152,20,24), #Idle
+    (52,153,26,25),(79,152,21,25),(101,154,22,22), #Running
+    (126,152,31,24), #Running Punch
+    (161,151,19,30),(185,150,22,31),(208,151,28,30), #Jumping
+    (7,183,21,24), #Idle (Attack)
+    (30,183,23,24),(55,183,28,24), #Normal Attack
+    (87,182,25,30),(114,182,28,30), #Jump Attack
+    (150,44,17,11),(170,44,20,11),(157,58,24,13), #Fireball (Color 1)
+    (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
+    ];
+    
     #spriteSheet = None;
     #image = None;
     
     RyuType = Ryu;
-    
     AnimCounter = None;
-    
-    #rects = [(8, 13, 20, 23)];
     displaySurface = None;
     bolt = None
 
-    
     def __init__(self):
         self.data = []
-        #self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         
     def changeFrame(self,n): 
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[n]));
@@ -70,14 +78,12 @@ class Player:
 
     def main(self):
         self.update();
-        #self.render();
         
     def init(self,boltIn):
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
         self.spriteSheet.set_colorkey((255,0,255));
         self.AnimCounter = 0.0;
         self.changeFrame(0);
-        #objSurf.set_colorkey((0,162,232));
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
         self.bolt = boltIn
         
@@ -89,7 +95,6 @@ class Player:
     
     def MoveY(self,by):
         self.position[1]=self.position[1]+by;
-        
         
     def Run(self,speed):
         self.AnimCounter+=speed;
@@ -105,15 +110,17 @@ class Player:
             self.AnimCounter = 0;
         
         self.changeFrame(int(self.AnimCounter));
-    #Functions
-    #def init(self):
-    #global CLOCK, VIEWPORT, FONT
-     #  
-    #CLOCK = pygame.time.Clock();
-    #VIEWPORT = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT));
-    #FONT = pygame.font.Font('freesansbold.ttf',18);
-    #pygame.display.set_caption('Simple Game');
-    #FontSurface = FONT.render("Test",True,(255,255,255));       
+
+    def IdleFire(self,speed):
+        self.AnimCounter+=speed;
+        if(speed > 0 and self.AnimCounter > 2):
+            self.AnimCounter = 0;
+        
+        self.changeFrame(10+int(self.AnimCounter));
+    def CheckDirection(self):
+        if(self.Facing == self.Left):
+            self.image = pygame.transform.flip(self.image, True, False)
+            
     def update(self):
         #Update Function
         #Handle Events
@@ -121,48 +128,30 @@ class Player:
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
             self.Run(0.1);
-            self.image = pygame.transform.flip(self.image, True, False)
             self.MoveX(-1);
+            self.Facing = self.Left;
         elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
             self.Run(0.1);
             self.MoveX(1);
+            self.Facing = self.Right;
         elif(pygame.key.get_pressed()[pygame.K_UP]):
             self.MoveY(-1);
         elif(pygame.key.get_pressed()[pygame.K_DOWN]):
             self.MoveY(1);
-        elif(pygame.key.get_pressed()[pygame.K_SPACE]):
+        elif(pygame.key.get_pressed()[pygame.K_SPACE] and self.bolt.hasFired == False):
             self.bolt.fire(self.position[0],self.position[1])
-            self.changeFrame(11)
+            self.Fired = True;
         else:
             self.Idle(0.08);
+            
+        if(self.Fired == True):
+            self.counter +=1;
+            self.IdleFire(0.1);
+            
+            if(self.counter >= 10):
+                self.Fired = False;
+                self.counter = 0;
         
-        #if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
-        #   ;
+        self.CheckDirection();
 
         return;
-        
-    '''def render(self, surf):
-        #Render Function
-        #Clears The Screen
-        surf.fill(BACK_COLOR);
-    
-        #Draw Object
-        surf.blit(player_image,player_image.get_rect(topleft = objPos));
-        #self.render(surf);
-        
-        #Updates The Display
-       # pygame.display.update();
-       
-        #Syncs To Desired Framerate
-        #CLOCK.tick(FPS_TARGET)
-       
-        return;'''
-    
-
-       
-#def close():
- #       pygame.quit();
- #       sys.exit();
- 
-#Execute main
-#main();

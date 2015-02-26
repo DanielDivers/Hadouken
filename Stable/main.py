@@ -118,27 +118,52 @@ def MenuUpdate():
     
     if(State == MenuState):
         for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT:
-                terminate()
+        
+            #if left mouse button is pressed
             if pygame.mouse.get_pressed()[0]:
                 MousePos = pygame.mouse.get_pos()
-                
-                #if(MousePos[0] > 180 and MousePos[0] < 445 and MousePos[1] > 45 and MousePos[1] < 205):
-                    #State = PlayState;
-                    
+
                 #if clicked on Start Game
                 if(pygame.Rect(180,50,255,35).collidepoint(MousePos)):
                     State = PlayState;
-                if(pygame.Rect(180,175,255,35).collidepoint(MousePos)):
+                #if clicked on Choose Character
+                if(pygame.Rect(180,135,255,35).collidepoint(MousePos)):
                     State = ChooseChState;
                     menu.ChangeToChooseCh(DISPLAYSURF);
-                if(pygame.Rect(180,225,255,35).collidepoint(MousePos)):
+                #if clicked on exit or Escape
+                if(pygame.Rect(180,225,255,35).collidepoint(MousePos) or pygame.key.get_pressed()[pygame.K_ESCAPE]):
                     terminate();
                     
     if(State == ChooseChState):
         for event in pygame.event.get(): # event handling loop
-            if event.type == QUIT:
-                terminate()
+            if(pygame.key.get_pressed()[pygame.K_ESCAPE]):
+                State = MenuState;
+                menu.ChangeToMenu(DISPLAYSURF);
+                
+            #if left mouse button is pressed
+            if pygame.mouse.get_pressed()[0]:
+                MousePos = pygame.mouse.get_pos()
+                
+                #if the Rect "Ryu" is clicked
+                if(pygame.Rect(20,WINDOWHEIGHT/2 - 35,255,35).collidepoint(MousePos)):
+                    player.RyuType = player.Ryu
+                    bolt.BoltType = bolt.RyuBolt;
+                    State = MenuState;
+                    menu.ChangeToMenu(DISPLAYSURF);
+                    
+                #if the Rect "Dark Ryu" is clicked
+                if(pygame.Rect(315,WINDOWHEIGHT/2 - 35,255,35).collidepoint(MousePos)):
+                    player.RyuType = player.DarkRyu;
+                    bolt.BoltType = bolt.DarkRyuBolt;
+                    State = MenuState;
+                    menu.ChangeToMenu(DISPLAYSURF);
+                    
+                #if the Rect "Flash Ryu" is clicked
+                if(pygame.Rect(165,WINDOWHEIGHT/2 + 100,255,35).collidepoint(MousePos)):
+                    player.RyuType = player.FlashRyu;
+                    bolt.BoltType = bolt.RyuBolt;
+                    State = MenuState;
+                    menu.ChangeToMenu(DISPLAYSURF);
     
 
 def MenuRender():
