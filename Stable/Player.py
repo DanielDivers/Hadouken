@@ -18,6 +18,7 @@ class Player:
     playerX = 100;
     playerY = 100;
     position = [playerX,playerY];
+
     Right = 0;
     Left = 1;
     counter = 0;
@@ -89,12 +90,14 @@ class Player:
 
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
 
+
         #objSurf.set_colorkey((0,162,232));
         #self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
-
         self.bolt = boltIn
+        self.rect[3] = self.rect[3]*2
+        self.falling = True
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
@@ -133,6 +136,7 @@ class Player:
         #Update Function
         #Handle Events
         self.rect.topleft = self.position
+
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
             self.Run(0.1);
@@ -153,6 +157,7 @@ class Player:
         else:
             self.Idle(0.08);
             
+
         if(self.Fired == True):
             self.counter +=1;
             self.IdleFire(0.1);
@@ -160,7 +165,43 @@ class Player:
             if(self.counter >= 10):
                 self.Fired = False;
                 self.counter = 0;
-        
         self.CheckDirection();
 
         return;
+
+    
+    
+    def updateGravity(self,platforms):
+        
+        for x in range (0,4):
+            if(self.rect.colliderect(platforms[x].position[0],platforms[x].position[1],platforms[x].collideLength[0],platforms[x].collideLength[1])):
+                self.falling = False
+                
+        if(self.falling):        
+            self.MoveY(2);
+    '''def render(self, surf):
+        #Render Function
+        #Clears The Screen
+        surf.fill(BACK_COLOR);
+    
+        #Draw Object
+        surf.blit(player_image,player_image.get_rect(topleft = objPos));
+        #self.render(surf);
+        
+        #Updates The Display
+       # pygame.display.update();
+       
+        #Syncs To Desired Framerate
+        #CLOCK.tick(FPS_TARGET)
+       
+        return;'''
+    
+
+       
+#def close():
+ #       pygame.quit();
+ #       sys.exit();
+ 
+#Execute main
+#main();
+

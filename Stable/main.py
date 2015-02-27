@@ -48,12 +48,7 @@ enemy = Enemy.Enemy()
 
 #global platform;
 #platform = platform.Platform()
-MenuState = 0;
-ChooseChState = 1;
-PlayState = 2;
 
-global State;
-State = MenuState;
 
 platforms = []
 
@@ -67,7 +62,7 @@ def main():
     runGame()
 
 def init():
-    global FPSCLOCK, DISPLAYSURF 
+    global FPSCLOCK, DISPLAYSURF
     
     
     pygame.mixer.music.load('guile.mp3')
@@ -80,17 +75,21 @@ def init():
     bolt.init()
     player.init(bolt)
     menu.init()
+
     enemy.init(600, 200)
     platforms[0].init(100, 200, 5)
     platforms[1].init(100, 250, 4)
     platforms[2].init(100, 300, 3)
     platforms[2].init(100, 300, 3)
+
     platforms[3].init(100, 350, 2)
     platforms[4].init(100, 400, 1)
     
     print(player.rect)
     print(enemy.rect)
+
     print(platforms[0].rect)
+
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
@@ -107,20 +106,10 @@ def init():
     
 
 def runGame():
-    global State;
-    State = MenuState;
-    
     #game_init()
-    #player.RyuType = player.DarkRyu;
-    
     while True:
-       if(State == MenuState or State == ChooseChState): 
-            MenuRender();
-            MenuUpdate();
-            
-       elif(State == PlayState):  
-            game_update()
-            game_render()
+        game_update()
+        game_render()
 
 #def game_init():
 
@@ -130,10 +119,12 @@ def game_update():
         if event.type == QUIT:
             terminate()
             
+
     player.update(effect)
     bolt.update()
     enemy.update()
-    
+    player.updateGravity(platforms)
+
     #print(pygame.sprite.collide_rect(player, enemy))
     #enemy.MoveX(-1)
     
@@ -206,7 +197,9 @@ def MenuUpdate():
                     bolt.BoltType = bolt.RyuBolt;
                     State = MenuState;
                     menu.ChangeToMenu(DISPLAYSURF);
+
     
+    #---------
 
 def MenuRender():
     #Main Menu State
@@ -233,13 +226,8 @@ def game_render():
 
     for x in range (0, 8):
         platforms[x].render(DISPLAYSURF)
-        
     pygame.display.update()
     FPSCLOCK.tick(FPS)
-    
-    for event in pygame.event.get(): # event handling loop
-        if event.type == QUIT:
-            terminate()
 
 def terminate():
     pygame.quit()

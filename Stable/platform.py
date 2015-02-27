@@ -13,6 +13,8 @@ class Platform:
     collideLengths = []
     rect = []
     
+    collideLength = []
+    
     def __init__(self):
         self.data = []
         
@@ -21,6 +23,7 @@ class Platform:
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]))
         self.position = [initPosX, initPosY]
         self.length = lengthIn
+
         self.collideLengths = [25*lengthIn,24]
         self.rect = self.image.get_rect()
         self.rect.topleft = self.position
