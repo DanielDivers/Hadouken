@@ -39,7 +39,7 @@ class HadoukenBolt:
     def init(self):
 
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuBolt[0]));
         self.image.set_colorkey((255,0,255));
         self.hasFired = False
         self.rect = self.image.get_rect()
