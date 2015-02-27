@@ -147,7 +147,9 @@ class Player:
             self.MoveX(1);
             self.Facing = self.Right;
         elif(pygame.key.get_pressed()[pygame.K_UP]):
-            self.MoveY(-1);
+            self.MoveY(-4);
+            self.changeFrame(8)
+            self.image = pygame.transform.flip(self.image, True, False)
         elif(pygame.key.get_pressed()[pygame.K_DOWN]):
             self.MoveY(1);
         elif(pygame.key.get_pressed()[pygame.K_SPACE] and self.bolt.hasFired == False):
@@ -173,12 +175,20 @@ class Player:
     
     def updateGravity(self,platforms):
         
-        for x in range (0,4):
-            if(self.rect.colliderect(platforms[x].position[0],platforms[x].position[1],platforms[x].collideLength[0],platforms[x].collideLength[1])):
-                self.falling = False
-                
+        platformRects = []
+        
+        for platform in platforms:
+            if (not platform.image == None):
+                platformRects.insert(0,pygame.Rect(platform.position[0],platform.position[1],platform.collideLengths[0],5));
+            
+            
+        if(not pygame.Rect(self.rect.x,self.rect.y+self.rect.h,self.rect.w,3).collidelist(platformRects) == -1):
+            self.falling = False;
+        else:
+            self.falling = True;
+        
         if(self.falling):        
-            self.MoveY(2);
+            self.MoveY(3);
     '''def render(self, surf):
         #Render Function
         #Clears The Screen

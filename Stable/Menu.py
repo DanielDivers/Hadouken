@@ -140,3 +140,9 @@ class Menu:
     def ChangeToMenu(self, displaySurface):
         self.position = [(DISPLAY_WIDTH/2) - 140, 50];
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.MenuRect[0]));
+        
+    def renderBackground(self, displaySurface):
+        displaySurface.blit(self.backImage,self.backImage.get_rect(topleft = (0,0)));
+        
+        
+        

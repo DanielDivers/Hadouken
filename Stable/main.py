@@ -46,15 +46,34 @@ menu = Menu.Menu()
 global enemy;
 enemy = Enemy.Enemy()
 
+MenuState = 0;
+ChooseChState = 1;
+PlayState = 2;
+
+global State
+State = MenuState
+
+spawnPoint1 = [600, 170]
+spawnPoint2 = [600, 270]
+spawnPoint3 = [600, 370]
+
+
+timer = 0
+spawnControl = 3
 #global platform;
 #platform = platform.Platform()
 
 
 platforms = []
+enemies = []
 
 for x in range(0, 100):
     platforms.append(platform.Platform())
 
+enemies.append(Enemy.Enemy())
+enemies.append(Enemy.Enemy())
+enemies.append(Enemy.Enemy())
+    
 
 def main():
     init()
@@ -76,17 +95,19 @@ def init():
     player.init(bolt)
     menu.init()
 
-    enemy.init(600, 200)
-    platforms[0].init(100, 200, 5)
-    platforms[1].init(100, 250, 4)
-    platforms[2].init(100, 300, 3)
-    platforms[2].init(100, 300, 3)
+    enemies[0].init(600, 170)
+    enemies[1].init(600, 270)
+    enemies[2].init(600, 370)
+    platforms[0].init(0, 200, 26)
+    platforms[1].init(0, 300, 26)
+    platforms[2].init(0, 400, 26)
+    #platforms[2].init(100, 300, 3)
 
     platforms[3].init(100, 350, 2)
     platforms[4].init(100, 400, 1)
     
     print(player.rect)
-    print(enemy.rect)
+    #print(enemy.rect)
 
     print(platforms[0].rect)
 
@@ -107,23 +128,43 @@ def init():
 
 def runGame():
     #game_init()
+    global State
+    State = MenuState
+    
     while True:
-        game_update()
-        game_render()
+        if(State == MenuState or State == ChooseChState):
+            MenuRender()
+            MenuUpdate()
+        elif(State == PlayState):
+            game_update()
+            game_render()
 
 #def game_init():
 
-def game_update():
-
+def game_update():  
+    global timer
+    global spawnControl
     for event in pygame.event.get(): # event handling loop
         if event.type == QUIT:
             terminate()
             
 
     player.update(effect)
-    bolt.update()
-    enemy.update()
     player.updateGravity(platforms)
+    bolt.update()
+    for enemy in enemies:
+        if(not enemy.image == None):
+            enemy.render(DISPLAYSURF)
+    
+            enemy.update()
+            if enemy.dying == False:
+                enemy.MoveX(-1)
+        
+            if pygame.sprite.collide_mask(bolt, enemy):
+                enemy.Die(0.01)
+                enemy.position[0] = 800 
+                enemy.position[1] = 800         
+    
 
     #print(pygame.sprite.collide_rect(player, enemy))
     #enemy.MoveX(-1)
@@ -135,14 +176,24 @@ def game_update():
     #for x in range(0, 5):
     if pygame.sprite.collide_rect(player, platforms[0]):
         print('Impact')
+        
+    print(timer) 
+    if (timer > 60):
     
-    if enemy.dying == False:
-        enemy.MoveX(-1)
+        enemies.append(Enemy.Enemy())
+        enemies.append(Enemy.Enemy())
+        enemies.append(Enemy.Enemy())
+        enemies[spawnControl].init(600, 370)
+        enemies[spawnControl+1].init(600, 270)
+        enemies[spawnControl+2].init(600, 170)
+        
+        spawnControl += 3
+        timer = 0
     
-    if pygame.sprite.collide_mask(bolt, enemy):
-        enemy.Die(0.01)
-        enemy.position[0] = 800 
-        enemy.position[1] = 800         
+    timer+=1
+
+    
+    
     #---------
  
    
@@ -218,16 +269,23 @@ def MenuRender():
         
 def game_render():
 
-    DISPLAYSURF.fill(BGCOLOR)
+
+    menu.renderBackground(DISPLAYSURF)
+        
+    #DISPLAYSURF.fill(BGCOLOR)
     #Game Running 
     player.render(DISPLAYSURF)
     bolt.render(DISPLAYSURF)
-    enemy.render(DISPLAYSURF)
+    for enemy in enemies:
+        if(not enemy.image == None):
+            enemy.render(DISPLAYSURF)
 
     for x in range (0, 8):
         platforms[x].render(DISPLAYSURF)
     pygame.display.update()
     FPSCLOCK.tick(FPS)
+    
+    
 
 def terminate():
     pygame.quit()

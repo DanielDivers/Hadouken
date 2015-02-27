@@ -24,6 +24,7 @@ class Enemy:
     
     def __init__(self):
         self.data = []
+        #self.image = None
         
     def changeFrame(self,n):
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[n]))
