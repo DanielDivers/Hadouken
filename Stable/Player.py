@@ -74,17 +74,20 @@ class Player:
         #self.render();
         
     def init(self,boltIn):
-        self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
-        self.spriteSheet.set_colorkey((255,0,255));
-        self.AnimCounter = 0.0;
-        self.changeFrame(0);
-        #objSurf.set_colorkey((0,162,232));
-        self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
-        self.rect = self.image.get_rect()
-        self.rect.topleft = self.position
-        self.bolt = boltIn
-        self.rect[3] = self.rect[3]*2
-        self.falling = True
+		self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
+		self.spriteSheet.set_colorkey((255,0,255));
+		self.AnimCounter = 0.0;
+		self.changeFrame(0);
+		#objSurf.set_colorkey((0,162,232));
+		#self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
+		self.rect = self.image.get_rect()
+		self.rect.topleft = self.position
+		boltIn.position[0] = self.position[0]+12
+		boltIn.position[1] = self.position[1]+55
+		self.bolt = boltIn
+		#self.rect[3] = self.rect[3]*2
+		self.falling = True
+		#self.jumping = False
         
     def render(self, displaySurface):
         displaySurface.blit(self.image,self.image.get_rect(topleft = self.position));
@@ -123,42 +126,55 @@ class Player:
         #Update Function
         #Handle Events
         
-        self.rect.topleft = self.position;
-        
-        #Make Object Controllable
-        if(pygame.key.get_pressed()[pygame.K_LEFT]):
-            self.Run(0.1);
-            self.image = pygame.transform.flip(self.image, True, False)
-            self.MoveX(-1);
-        elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
-            self.Run(0.1);
-            self.MoveX(1);
-        elif(pygame.key.get_pressed()[pygame.K_UP]):
-            self.MoveY(-1);
-        elif(pygame.key.get_pressed()[pygame.K_DOWN]):
-            self.MoveY(1);
-        elif(pygame.key.get_pressed()[pygame.K_SPACE]):
-            self.bolt.fire(self.position[0],self.position[1])
-            self.changeFrame(11)
-        else:
-            self.Idle(0.08);
-            
+		self.rect.topleft = self.position;
 
-        
-        #if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
-        #   ;
+		#Make Object Controllable
+		if(pygame.key.get_pressed()[pygame.K_LEFT]):
+			self.Run(0.1);
+			self.image = pygame.transform.flip(self.image, True, False)
+			self.MoveX(-1);
+		elif(pygame.key.get_pressed()[pygame.K_RIGHT]):
+			self.Run(0.1);
+			self.MoveX(1);
+		elif(pygame.key.get_pressed()[pygame.K_UP]):
+			self.MoveY(-4)
+			self.changeFrame(8);
+			self.image = pygame.transform.flip(self.image, True, False)
+		#elif(pygame.key.get_pressed()[pygame.K_DOWN]):
+		#    self.MoveY(1);
+		elif(pygame.key.get_pressed()[pygame.K_SPACE]):
+			self.bolt.reset();
+			self.bolt.fire(self.position[0]+12,self.position[1]+14)
+			self.changeFrame(11)
+		else:
+			self.Idle(0.08);
 
-        return;
+
+
+#if(self.image.get_rect(topleft = self.position).collidepoint(300,100)):
+#   ;
+
+		return;
     
     
     def updateGravity(self,platforms):
         
-        for x in range (0,4):
-            if(self.rect.colliderect(platforms[x].position[0],platforms[x].position[1],platforms[x].collideLength[0],platforms[x].collideLength[1])):
-                self.falling = False
-                
-        if(self.falling):        
-            self.MoveY(2);
+		platformRects = [];
+
+		#for x in range (0,4):
+		
+		for platform in platforms:
+		
+			if(not platform.image == None):
+				platformRects.insert(0,pygame.Rect(platform.position[0],platform.position[1],platform.collideLength[0],5));
+	
+		if(not pygame.Rect(self.rect.x,self.rect.y+self.rect.h,self.rect.w,3).collidelist(platformRects) == -1):
+			self.falling = False;
+		else:
+			self.falling = True;
+		
+		if(self.falling):        
+			self.MoveY(3);
     '''def render(self, surf):
         #Render Function
         #Clears The Screen

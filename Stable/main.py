@@ -132,13 +132,13 @@ def game_render():
     elif(menu.CharacterSelectionMenu == True and menu.StartMenu == False):
         menu.CharacterChRender(DISPLAYSURF);
         menu.renderCharacterChText(DISPLAYSURF);
-    
-    
-    player.render(DISPLAYSURF)
-    bolt.render(DISPLAYSURF)
-    enemy.render(DISPLAYSURF)
+		
     for x in range (0, 8):
         platforms[x].render(DISPLAYSURF)
+    bolt.render(DISPLAYSURF)
+    player.render(DISPLAYSURF)
+    enemy.render(DISPLAYSURF)
+
     pygame.display.update()
     FPSCLOCK.tick(FPS)
 
