@@ -20,7 +20,6 @@ class Player:
     position = [playerX,playerY];
     Right = 0;
     Left = 1;
-    
     counter = 0;
     Fired = False;
     Facing = Right;
@@ -47,7 +46,9 @@ class Player:
     (87,109,25,30),(114,109,28,30), #Jump Attack
     (145,114,17,11),(165,114,20,11),(153,128,24,13), #Fireball (Color 1)
     (195,44,17,11),(215,44,20,11),(202,58,24,13) #Fireball (Color 2)
-    ];
+
+    rect = []
+    #position = [100,100];
     
     FlashRyu = [
     (7,152,21,24),(31,152,20,24), #Idle
@@ -84,7 +85,14 @@ class Player:
         self.spriteSheet.set_colorkey((255,0,255));
         self.AnimCounter = 0.0;
         self.changeFrame(0);
+
         self.image = self.spriteSheet.subsurface(pygame.Rect(self.RyuType[0]));
+
+        #objSurf.set_colorkey((0,162,232));
+        #self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
+
         self.bolt = boltIn
         
     def render(self, displaySurface):
@@ -108,7 +116,6 @@ class Player:
         self.AnimCounter+=speed;
         if(speed > 0 and self.AnimCounter > 2):
             self.AnimCounter = 0;
-        
         self.changeFrame(int(self.AnimCounter));
 
     def IdleFire(self,speed):
@@ -121,10 +128,10 @@ class Player:
         if(self.Facing == self.Left):
             self.image = pygame.transform.flip(self.image, True, False)
             
-    def update(self):
+    def update(self, effectIn):
         #Update Function
         #Handle Events
-               
+        self.rect.topleft = self.position
         #Make Object Controllable
         if(pygame.key.get_pressed()[pygame.K_LEFT]):
             self.Run(0.1);
@@ -141,6 +148,7 @@ class Player:
         elif(pygame.key.get_pressed()[pygame.K_SPACE] and self.bolt.hasFired == False):
             self.bolt.fire(self.position[0],self.position[1])
             self.Fired = True;
+            effectIn.play()
         else:
             self.Idle(0.08);
             

@@ -9,7 +9,7 @@ Created using Pygame
 
 '''
 
-import pygame, sys, Player, HadoukenBolt, platform, Menu
+import pygame, sys, Player, HadoukenBolt, platform, Menu, Enemy
 from pygame.locals import *
 
 FPS = 60
@@ -43,6 +43,9 @@ bolt = HadoukenBolt.HadoukenBolt()
 global menu;
 menu = Menu.Menu()
 
+global enemy;
+enemy = Enemy.Enemy()
+
 #global platform;
 #platform = platform.Platform()
 MenuState = 0;
@@ -66,17 +69,28 @@ def main():
 def init():
     global FPSCLOCK, DISPLAYSURF 
     
+    
+    pygame.mixer.music.load('guile.mp3')
+    pygame.mixer.music.play(0)
+    
+    
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
    
     bolt.init()
     player.init(bolt)
     menu.init()
+    enemy.init(600, 200)
     platforms[0].init(100, 200, 5)
-    platforms[1].init(200, 300, 4)
-    platforms[2].init(500, 200, 3)
-    platforms[3].init(100, 500, 2)
-    platforms[4].init(100, 600, 1)
+    platforms[1].init(100, 250, 4)
+    platforms[2].init(100, 300, 3)
+    platforms[2].init(100, 300, 3)
+    platforms[3].init(100, 350, 2)
+    platforms[4].init(100, 400, 1)
+    
+    print(player.rect)
+    print(enemy.rect)
+    print(platforms[0].rect)
     #for x in range(0, 10):
     ''' platforms[0].init(100 + 20, 100)
     platforms[1].init(100 + 40, 100)
@@ -87,6 +101,8 @@ def init():
     platforms[6].init(100 + 140, 100)
     platforms[7].init(100 + 160, 100)
     platforms[8].init(0 + 180, 100) '''
+    
+    
     
     
 
@@ -109,8 +125,34 @@ def runGame():
 #def game_init():
 
 def game_update():
-    player.update()
+
+    for event in pygame.event.get(): # event handling loop
+        if event.type == QUIT:
+            terminate()
+            
+    player.update(effect)
     bolt.update()
+    enemy.update()
+    
+    #print(pygame.sprite.collide_rect(player, enemy))
+    #enemy.MoveX(-1)
+    
+    #---------COLLISION DETECTION
+    #if pygame.sprite.collide_mask(player,enemy):
+    #    enemy.MoveX(1)
+    #else:
+    #for x in range(0, 5):
+    if pygame.sprite.collide_rect(player, platforms[0]):
+        print('Impact')
+    
+    if enemy.dying == False:
+        enemy.MoveX(-1)
+    
+    if pygame.sprite.collide_mask(bolt, enemy):
+        enemy.Die(0.01)
+        enemy.position[0] = 800 
+        enemy.position[1] = 800         
+    #---------
  
    
 def MenuUpdate():
@@ -169,8 +211,10 @@ def MenuUpdate():
 def MenuRender():
     #Main Menu State
     if(State == MenuState):
-        menu.renderMenu(DISPLAYSURF);
-        menu.renderMenutext(DISPLAYSURF);
+        DISPLAYSURF.fill(BGCOLOR)
+        if(menu.StartMenu == True and menu.CharacterSelectionMenu == False):
+            menu.renderMenu(DISPLAYSURF);
+            menu.renderMenutext(DISPLAYSURF);
         
     #Character Selection State
     elif(State == ChooseChState):
@@ -184,9 +228,9 @@ def game_render():
     DISPLAYSURF.fill(BGCOLOR)
     #Game Running 
     player.render(DISPLAYSURF)
-    
     bolt.render(DISPLAYSURF)
-    
+    enemy.render(DISPLAYSURF)
+
     for x in range (0, 8):
         platforms[x].render(DISPLAYSURF)
         

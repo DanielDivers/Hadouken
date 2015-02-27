@@ -19,9 +19,13 @@ class HadoukenBolt:
     displaySurface = None;
     hasFired = False
     speed = 5
+
     AnimCounter = 0;
     
     BoltType = RyuBolt;
+
+    rect = []
+
     
     def __init__(self):
         self.data = []
@@ -35,9 +39,11 @@ class HadoukenBolt:
     def init(self):
 
         self.spriteSheet = pygame.image.load("Images/Ryu.png").convert();
-        self.spriteSheet.set_colorkey((255,0,255));
-        self.changeFrame(0);
+        self.image = self.spriteSheet.subsurface(pygame.Rect(self.rects[0]));
+        self.image.set_colorkey((255,0,255));
         self.hasFired = False
+        self.rect = self.image.get_rect()
+        self.rect.topleft = self.position
 
         
     def render(self, displaySurface):
@@ -53,6 +59,7 @@ class HadoukenBolt:
         if self.hasFired == True:
             self.boltX += self.speed
             self.position = [self.boltX, self.boltY]
+            self.rect.topleft = self.position
             
         if(self.AnimCounter > 2):
             self.changeFrame(2);
